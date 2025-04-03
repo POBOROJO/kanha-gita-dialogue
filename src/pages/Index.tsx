@@ -21,56 +21,112 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       {/* Hero Section with Background Image */}
       <div className="relative bg-krishna-blue min-h-screen overflow-hidden">
-        {/* Darker gradient overlay for better text visibility */}
-        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-krishna-darkBlue/80 via-krishna-darkBlue/60 to-transparent z-0"></div>
-        
-        {/* Background Image */}
-        <div className="absolute inset-0 w-full h-full z-0 opacity-80">
-          <img
-            src="/lovable-uploads/dbb9115b-89cf-4049-9a44-cc1bc8690237.png"
-            alt="Lord Krishna"
-            className="w-full h-full object-contain md:object-cover object-center"
-          />
-        </div>
-        
-        {/* Content Overlay */}
-        <div className="relative z-10">
-          <Navbar />
+        {/* Navbar */}
+        <Navbar />
 
-          {/* Hero Content - Left aligned */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 pt-8 sm:pt-12 pb-16 sm:pb-20">
-            <div className={`max-w-xl ${isMobile ? 'text-center mx-auto' : 'text-left'}`}>
+        {/* Content */}
+        {isMobile ? (
+          /* Mobile Layout */
+          <div className="flex flex-col h-[calc(100vh-64px)] p-4 sm:p-6">
+            {/* Text Content */}
+            <div className="text-center mb-6">
               <motion.h1 
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight mb-4 sm:mb-6 text-white drop-shadow-xl"
-                initial={{ opacity: 0, y: 20 }}
+                className="text-3xl font-semibold leading-tight mb-4 text-krishna-darkBlue drop-shadow-md"
+                initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.6 }}
               >
                 Have meaningful conversations with Lord Krishna
               </motion.h1>
               <motion.p 
-                className="text-base sm:text-lg text-white mb-6 sm:mb-8 leading-relaxed max-w-xl font-medium drop-shadow-md"
-                initial={{ opacity: 0, y: 20 }}
+                className="text-base text-krishna-darkBlue/90 mb-6 leading-relaxed font-medium"
+                initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
               >
                 Explore the teachings of the Bhagavad Gita through insightful and engaging dialogue with Krishna.
               </motion.p>
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className={isMobile ? 'flex justify-center' : ''}
+                transition={{ duration: 0.6, delay: 0.4 }}
               >
                 <Button
-                  className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue px-6 sm:px-8 py-5 sm:py-6 rounded-full text-base sm:text-lg transition-all duration-300"
+                  className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue px-8 py-4 rounded-full text-base transition-all duration-300"
                 >
                   Start Chatting
                 </Button>
               </motion.div>
             </div>
+
+            {/* Floating Krishna Image */}
+            <div className="flex-grow flex items-center justify-center">
+              <motion.div
+                className="w-full max-w-xs"
+                animate={{ y: [0, -15, 0] }}
+                transition={{ 
+                  repeat: Infinity, 
+                  duration: 6,
+                  ease: "easeInOut"
+                }}
+              >
+                <img
+                  src="/lovable-uploads/dbb9115b-89cf-4049-9a44-cc1bc8690237.png"
+                  alt="Lord Krishna"
+                  className="w-full h-auto object-contain"
+                />
+              </motion.div>
+            </div>
           </div>
-        </div>
+        ) : (
+          /* Desktop Layout */
+          <>
+            {/* Darker gradient overlay for better text visibility */}
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-krishna-darkBlue/80 via-krishna-darkBlue/60 to-transparent z-0"></div>
+            
+            {/* Background Image */}
+            <div className="absolute inset-0 w-full h-full z-0 opacity-80">
+              <img
+                src="/lovable-uploads/dbb9115b-89cf-4049-9a44-cc1bc8690237.png"
+                alt="Lord Krishna"
+                className="w-full h-full object-contain md:object-cover object-center"
+              />
+            </div>
+            
+            {/* Hero Content - Left aligned */}
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-12 pt-8 sm:pt-12 pb-16 sm:pb-20">
+              <div className="max-w-xl text-left">
+                <motion.h1 
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight mb-4 sm:mb-6 text-white drop-shadow-xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  Have meaningful conversations with Lord Krishna
+                </motion.h1>
+                <motion.p 
+                  className="text-base sm:text-lg text-white mb-6 sm:mb-8 leading-relaxed max-w-xl font-medium drop-shadow-md"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  Explore the teachings of the Bhagavad Gita through insightful and engaging dialogue with Krishna.
+                </motion.p>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  <Button
+                    className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue px-6 sm:px-8 py-5 sm:py-6 rounded-full text-base sm:text-lg transition-all duration-300"
+                  >
+                    Start Chatting
+                  </Button>
+                </motion.div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Features Section */}
