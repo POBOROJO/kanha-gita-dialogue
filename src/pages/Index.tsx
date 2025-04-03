@@ -29,7 +29,7 @@ const Index = () => {
           <img
             src="/lovable-uploads/dbb9115b-89cf-4049-9a44-cc1bc8690237.png"
             alt="Lord Krishna"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-contain md:object-cover object-center"
           />
         </div>
         
