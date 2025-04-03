@@ -18,7 +18,8 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       {/* Hero Section with Background Image */}
       <div className="relative bg-krishna-blue min-h-screen overflow-hidden">
-        <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-krishna-blue/80 to-krishna-blue z-0"></div>
+        {/* Darker gradient overlay for better text visibility */}
+        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-krishna-darkBlue/70 via-krishna-darkBlue/50 to-transparent z-0"></div>
         
         {/* Background Image */}
         <div className="absolute inset-0 w-full h-full z-0 opacity-80">
@@ -33,35 +34,37 @@ const Index = () => {
         <div className="relative z-10">
           <Navbar />
 
-          {/* Hero Content */}
-          <div className="max-w-7xl mx-auto px-6 md:px-12 pt-12 pb-20 flex flex-col items-center text-center">
-            <motion.h1 
-              className="text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-6 text-white drop-shadow-lg"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              Have meaningful conversations with Lord Krishna
-            </motion.h1>
-            <motion.p 
-              className="text-lg text-white/90 mb-8 leading-relaxed max-w-3xl"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Explore the teachings of the Bhagavad Gita through insightful and engaging dialogue with Krishna.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <Button
-                className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue px-8 py-6 rounded-full text-lg transition-all duration-300"
+          {/* Hero Content - Left aligned */}
+          <div className="max-w-7xl mx-auto px-6 md:px-12 pt-12 pb-20">
+            <div className="max-w-xl text-left">
+              <motion.h1 
+                className="text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-6 text-white drop-shadow-xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
               >
-                Start Chatting
-              </Button>
-            </motion.div>
+                Have meaningful conversations with Lord Krishna
+              </motion.h1>
+              <motion.p 
+                className="text-lg text-white mb-8 leading-relaxed max-w-xl font-medium drop-shadow-md"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                Explore the teachings of the Bhagavad Gita through insightful and engaging dialogue with Krishna.
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <Button
+                  className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue px-8 py-6 rounded-full text-lg transition-all duration-300"
+                >
+                  Start Chatting
+                </Button>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
