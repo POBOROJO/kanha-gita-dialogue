@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -64,6 +65,14 @@ const krishnaResponses = [
   "You have a right to perform your prescribed duties, but you are not entitled to the fruits of your actions.",
   "For one who has conquered the mind, the mind is the best of friends; but for one who has failed to do so, his mind will remain the greatest enemy.",
   "When meditation is mastered, the mind is unwavering like the flame of a candle in a windless place.",
+];
+
+const suggestedQuestions = [
+  "What does the Bhagavad Gita teach about duty?",
+  "How can I find my purpose in life?",
+  "Tell me about the concept of dharma.",
+  "What is the meaning of karma?",
+  "How can I achieve inner peace?",
 ];
 
 const SidebarToggle = () => {
@@ -167,6 +176,10 @@ const Chat = () => {
     ]);
   };
 
+  const handleSuggestedQuestion = (question: string) => {
+    setInput(question);
+  };
+
   return (
     <SidebarProvider defaultOpen={!isMobile}>
       <div className="flex h-screen bg-krishna-blue/20">
@@ -220,6 +233,19 @@ const Chat = () => {
           </div>
 
           <div className="p-4 border-t border-krishna-blue/20 bg-white/50 backdrop-blur-sm">
+            <div className="mb-3 flex flex-wrap gap-2">
+              {suggestedQuestions.map((question, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  size="sm"
+                  className="bg-krishna-blue/30 border-krishna-blue/40 text-krishna-darkBlue text-xs hover:bg-krishna-blue/50"
+                  onClick={() => handleSuggestedQuestion(question)}
+                >
+                  {question}
+                </Button>
+              ))}
+            </div>
             <div className="flex space-x-2">
               <Input
                 value={input}
