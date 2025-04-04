@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Send, LogOut } from "lucide-react";
+import { Send, LogOut, Menu, PanelLeftClose } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -17,11 +16,11 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarProvider,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ChatMessage from "@/components/ChatMessage";
 
-// Type definitions for our chat
 type MessageType = {
   id: string;
   content: string;
@@ -57,7 +56,6 @@ const mockConversations: ConversationType[] = [
   },
 ];
 
-// Sample responses for the demo
 const krishnaResponses = [
   "As I told Arjuna, fulfill your duty without attachment to the fruits of your actions. This is the essence of karma yoga.",
   "Remember, wherever there is Krishna and wherever there is Arjuna, there will be wealth, victory, prosperity, and morality.",
@@ -67,6 +65,25 @@ const krishnaResponses = [
   "For one who has conquered the mind, the mind is the best of friends; but for one who has failed to do so, his mind will remain the greatest enemy.",
   "When meditation is mastered, the mind is unwavering like the flame of a candle in a windless place.",
 ];
+
+const SidebarToggle = () => {
+  const { toggleSidebar, open } = useSidebar();
+  
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={toggleSidebar}
+      className="text-krishna-darkBlue hover:bg-krishna-blue/20"
+      title={open ? "Close Sidebar" : "Open Sidebar"}
+    >
+      {open ? 
+        <PanelLeftClose className="h-5 w-5" /> : 
+        <Menu className="h-5 w-5" />
+      }
+    </Button>
+  );
+};
 
 const Chat = () => {
   const [messages, setMessages] = useState<MessageType[]>([
@@ -85,7 +102,6 @@ const Chat = () => {
   const isMobile = useIsMobile();
   
   useEffect(() => {
-    // Check if user is logged in
     const user = localStorage.getItem("user");
     if (!user) {
       navigate("/auth");
@@ -95,7 +111,6 @@ const Chat = () => {
   const handleSend = () => {
     if (!input.trim()) return;
     
-    // Add user message
     const userMessage: MessageType = {
       id: Date.now().toString(),
       content: input,
@@ -106,7 +121,6 @@ const Chat = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     
-    // Simulate Krishna's response after a short delay
     setTimeout(() => {
       const randomResponse = krishnaResponses[Math.floor(Math.random() * krishnaResponses.length)];
       const krishnaMessage: MessageType = {
@@ -118,7 +132,6 @@ const Chat = () => {
       
       setMessages((prev) => [...prev, krishnaMessage]);
       
-      // If this is a new conversation, add it to the list
       if (!currentConversation) {
         const newConversation: ConversationType = {
           id: Date.now().toString(),
@@ -144,7 +157,6 @@ const Chat = () => {
 
   const selectConversation = (conversation: ConversationType) => {
     setCurrentConversation(conversation);
-    // In a real app, we'd load the messages for this conversation
     setMessages([
       {
         id: "sample",
@@ -158,7 +170,6 @@ const Chat = () => {
   return (
     <SidebarProvider defaultOpen={!isMobile}>
       <div className="flex h-screen bg-krishna-blue/20">
-        {/* Sidebar for conversations */}
         <Sidebar className="border-r border-krishna-blue/20">
           <SidebarHeader className="p-4 flex justify-between items-center">
             <h2 className="text-xl font-serif text-krishna-darkBlue">Kanha GPT</h2>
@@ -197,16 +208,17 @@ const Chat = () => {
           </SidebarContent>
         </Sidebar>
 
-        {/* Main chat area */}
         <div className="flex flex-col flex-1 h-screen overflow-hidden">
-          {/* Chat messages */}
+          <div className="p-2 border-b border-krishna-blue/20">
+            <SidebarToggle />
+          </div>
+          
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
           </div>
 
-          {/* Input area */}
           <div className="p-4 border-t border-krishna-blue/20 bg-white/50 backdrop-blur-sm">
             <div className="flex space-x-2">
               <Input
