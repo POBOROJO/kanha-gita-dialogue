@@ -1,8 +1,8 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Send, LogOut, Menu, PanelLeftClose } from "lucide-react";
+import { Send, LogOut, Menu, PanelLeftClose, Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -106,16 +106,74 @@ const Chat = () => {
   const [input, setInput] = useState("");
   const [currentConversation, setCurrentConversation] = useState<ConversationType | null>(null);
   const [conversations, setConversations] = useState<ConversationType[]>(mockConversations);
+  const [isListening, setIsListening] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  
+  // Speech recognition setup
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (!user) {
       navigate("/auth");
     }
-  }, [navigate]);
+    
+    // Initialize speech recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+      
+      recognitionRef.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+      };
+      
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error', event.error);
+        toast({
+          title: "Voice Input Error",
+          description: `Could not recognize speech: ${event.error}`,
+          variant: "destructive",
+        });
+        setIsListening(false);
+      };
+      
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+    
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [navigate, toast]);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      toast({
+        title: "Voice Input Not Supported",
+        description: "Your browser doesn't support voice recognition.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -254,6 +312,18 @@ const Chat = () => {
                 className="flex-1"
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
               />
+              <Button
+                onClick={toggleListening}
+                className={`${
+                  isListening 
+                    ? "bg-red-500 hover:bg-red-600" 
+                    : "bg-krishna-blue/50 hover:bg-krishna-blue/70"
+                } text-krishna-darkBlue`}
+                size="icon"
+                title={isListening ? "Stop Listening" : "Start Voice Input"}
+              >
+                {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+              </Button>
               <Button 
                 onClick={handleSend} 
                 className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue"
