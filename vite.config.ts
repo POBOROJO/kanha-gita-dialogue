@@ -10,9 +10,11 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     strictPort: true,
     cors: true,
-    allowedHosts: ["9d8a-2405-201-a80c-c80c-f601-ff3c-6015-7306.ngrok-free.app"], // Add your ngrok domain here
+    allowedHosts: ["6f12-2405-201-a80c-c80c-1890-47ac-1279-844c.ngrok-free.app"], // Add your ngrok domain here
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [react(), mode === "development" && componentTagger()].filter(
+    Boolean
+  ),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
