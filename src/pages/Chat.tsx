@@ -1,0 +1,233 @@
+
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Send, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarProvider,
+} from "@/components/ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
+import ChatMessage from "@/components/ChatMessage";
+
+// Type definitions for our chat
+type MessageType = {
+  id: string;
+  content: string;
+  sender: "user" | "krishna";
+  timestamp: Date;
+};
+
+type ConversationType = {
+  id: string;
+  title: string;
+  lastMessage: string;
+  timestamp: Date;
+};
+
+const mockConversations: ConversationType[] = [
+  {
+    id: "1",
+    title: "Dharma and Duty",
+    lastMessage: "What is my dharma in this life?",
+    timestamp: new Date(2025, 3, 3),
+  },
+  {
+    id: "2",
+    title: "Inner Peace",
+    lastMessage: "How can I find inner peace?",
+    timestamp: new Date(2025, 3, 2),
+  },
+  {
+    id: "3",
+    title: "Karma Yoga",
+    lastMessage: "Tell me about karma yoga.",
+    timestamp: new Date(2025, 3, 1),
+  },
+];
+
+// Sample responses for the demo
+const krishnaResponses = [
+  "As I told Arjuna, fulfill your duty without attachment to the fruits of your actions. This is the essence of karma yoga.",
+  "Remember, wherever there is Krishna and wherever there is Arjuna, there will be wealth, victory, prosperity, and morality.",
+  "The mind is restless and difficult to restrain, but it can be controlled by practice and detachment.",
+  "Those who eat too much or eat too little, who sleep too much or sleep too little, cannot succeed in meditation.",
+  "You have a right to perform your prescribed duties, but you are not entitled to the fruits of your actions.",
+  "For one who has conquered the mind, the mind is the best of friends; but for one who has failed to do so, his mind will remain the greatest enemy.",
+  "When meditation is mastered, the mind is unwavering like the flame of a candle in a windless place.",
+];
+
+const Chat = () => {
+  const [messages, setMessages] = useState<MessageType[]>([
+    {
+      id: "welcome",
+      content: "Namaste! I am Krishna, how may I guide you today?",
+      sender: "krishna",
+      timestamp: new Date(),
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [currentConversation, setCurrentConversation] = useState<ConversationType | null>(null);
+  const [conversations, setConversations] = useState<ConversationType[]>(mockConversations);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  
+  useEffect(() => {
+    // Check if user is logged in
+    const user = localStorage.getItem("user");
+    if (!user) {
+      navigate("/auth");
+    }
+  }, [navigate]);
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+    
+    // Add user message
+    const userMessage: MessageType = {
+      id: Date.now().toString(),
+      content: input,
+      sender: "user",
+      timestamp: new Date(),
+    };
+    
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    
+    // Simulate Krishna's response after a short delay
+    setTimeout(() => {
+      const randomResponse = krishnaResponses[Math.floor(Math.random() * krishnaResponses.length)];
+      const krishnaMessage: MessageType = {
+        id: (Date.now() + 1).toString(),
+        content: randomResponse,
+        sender: "krishna",
+        timestamp: new Date(),
+      };
+      
+      setMessages((prev) => [...prev, krishnaMessage]);
+      
+      // If this is a new conversation, add it to the list
+      if (!currentConversation) {
+        const newConversation: ConversationType = {
+          id: Date.now().toString(),
+          title: input.substring(0, 20) + (input.length > 20 ? "..." : ""),
+          lastMessage: input,
+          timestamp: new Date(),
+        };
+        
+        setCurrentConversation(newConversation);
+        setConversations((prev) => [newConversation, ...prev]);
+      }
+    }, 1000);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    toast({
+      title: "Logged out successfully",
+      description: "We hope to see you again soon!",
+    });
+    navigate("/");
+  };
+
+  const selectConversation = (conversation: ConversationType) => {
+    setCurrentConversation(conversation);
+    // In a real app, we'd load the messages for this conversation
+    setMessages([
+      {
+        id: "sample",
+        content: "This is where the selected conversation would load.",
+        sender: "krishna",
+        timestamp: new Date(),
+      },
+    ]);
+  };
+
+  return (
+    <SidebarProvider defaultOpen={!isMobile}>
+      <div className="flex h-screen bg-krishna-blue/20">
+        {/* Sidebar for conversations */}
+        <Sidebar className="border-r border-krishna-blue/20">
+          <SidebarHeader className="p-4 flex justify-between items-center">
+            <h2 className="text-xl font-serif text-krishna-darkBlue">Kanha GPT</h2>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleLogout}
+              className="text-krishna-darkBlue hover:text-red-500"
+              title="Logout"
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Your Conversations</SidebarGroupLabel>
+              <SidebarMenu>
+                {conversations.map((conversation) => (
+                  <SidebarMenuItem key={conversation.id}>
+                    <SidebarMenuButton 
+                      onClick={() => selectConversation(conversation)}
+                      isActive={currentConversation?.id === conversation.id}
+                    >
+                      <div className="flex flex-col items-start">
+                        <span className="text-sm font-medium">{conversation.title}</span>
+                        <span className="text-xs text-muted-foreground truncate w-full">
+                          {conversation.lastMessage.substring(0, 25)}
+                          {conversation.lastMessage.length > 25 ? "..." : ""}
+                        </span>
+                      </div>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
+
+        {/* Main chat area */}
+        <div className="flex flex-col flex-1 h-screen overflow-hidden">
+          {/* Chat messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.map((message) => (
+              <ChatMessage key={message.id} message={message} />
+            ))}
+          </div>
+
+          {/* Input area */}
+          <div className="p-4 border-t border-krishna-blue/20 bg-white/50 backdrop-blur-sm">
+            <div className="flex space-x-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask Krishna anything..."
+                className="flex-1"
+                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              />
+              <Button 
+                onClick={handleSend} 
+                className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue"
+              >
+                <Send className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </SidebarProvider>
+  );
+};
+
+export default Chat;

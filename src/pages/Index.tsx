@@ -1,5 +1,7 @@
+
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { MessageSquare, FileText, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -10,11 +12,16 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Update the document title
     document.title = "Kanha GPT - Conversations with Lord Krishna";
   }, []);
+
+  const handleStartChatting = () => {
+    navigate("/auth");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -51,7 +58,10 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                <Button className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue px-8 py-4 rounded-full text-base transition-all duration-300">
+                <Button 
+                  className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue px-8 py-4 rounded-full text-base transition-all duration-300"
+                  onClick={handleStartChatting}
+                >
                   Start Chatting
                 </Button>
               </motion.div>
@@ -130,7 +140,10 @@ const Index = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  <Button className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue px-6 sm:px-8 py-5 sm:py-6 rounded-full text-base sm:text-lg transition-all duration-300">
+                  <Button 
+                    className="bg-krishna-gold hover:bg-amber-500 text-krishna-darkBlue px-6 sm:px-8 py-5 sm:py-6 rounded-full text-base sm:text-lg transition-all duration-300"
+                    onClick={handleStartChatting}
+                  >
                     Start Chatting
                   </Button>
                 </motion.div>
