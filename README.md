@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# Kanha GPT - Conversations with Lord Krishna
 
 ## Project info
 
